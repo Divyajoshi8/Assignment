@@ -16,11 +16,12 @@ import visitorIcon from '../assets/images/visitor.png';
 
 const ResponsiveLayout = () => {
   const [activeIcon, setActiveIcon] = useState(null); // State to track the active icon
-  const [content, setContent] = useState(''); // State to track main content
+  const [content, setContent] = useState('vendors'); // State to track main content
   const [searchInput, setSearchInput] = useState(''); // State for search input
   const [pageNumber, setPageNumber] = useState(1); // State for page number
   const [showDetails, setShowDetails] = useState(null); 
-
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [vendors, setVendors] = useState([]); // State for vendor data
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
@@ -33,6 +34,8 @@ const ResponsiveLayout = () => {
     idType: '',
     idNumber: '',
     dateOfVisit: '',
+    entryTime:'',
+    exitTime:'',
   });
 
   const handleInputChange = (e) => {
@@ -40,10 +43,32 @@ const ResponsiveLayout = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form Data:', formData);
-    // Handle form submission logic
+    // Add the new vendor to the list
+    setVendors([...vendors, formData]);
+    // Clear the form data
+    setFormData({
+      fullName: '',
+      email: '',
+      phoneNumber: '',
+      comingFrom: '',
+      company: '',
+      hostName: '',
+      purposeOfVisit: '',
+      idType: '',
+      idNumber: '',
+      dateOfVisit: '',
+      entryTime:'',
+      exitTime:'',
+    });
+    // Show success message
+    setShowSuccess(true);
+    // Hide the form
+    setShowForm(false);
+    // Hide the success message after 3 seconds
+    setTimeout(() => setShowSuccess(false), 3000);
   };
 
   const handleClick = (iconName) => {
@@ -460,7 +485,7 @@ const ResponsiveLayout = () => {
               </div>
 
               {/* Row 4 */}
-              <div style={{ flex: '1 1 100%' }}>
+              <div style={{ flex: '1 1 30%' }}>
                 <label>Date of Visit</label>
                 <input
                   type="date"
@@ -475,6 +500,38 @@ const ResponsiveLayout = () => {
                   }}
                 />
               </div>
+
+              <div style={{ flex: '1 1 30%' }}>
+    <label>Entry Time</label>
+    <input
+      type="time"
+      name="entryTime"
+      value={formData.entryTime}
+      onChange={handleInputChange}
+      style={{
+        width: '100%',
+        padding: '10px',
+        borderRadius: '5px',
+        border: '1px solid #FF8C00',
+      }}
+    />
+  </div>
+
+  <div style={{ flex: '1 1 30%' }}>
+    <label>Exit Time</label>
+    <input
+      type="time"
+      name="exitTime"
+      value={formData.exitTime}
+      onChange={handleInputChange}
+      style={{
+        width: '100%',
+        padding: '10px',
+        borderRadius: '5px',
+        border: '1px solid #FF8C00',
+      }}
+    />
+  </div>
             </div>
 
             <button
@@ -495,6 +552,25 @@ const ResponsiveLayout = () => {
           </form>
           </div>
       )}
+
+{showSuccess && (
+                      <div
+                        style={{
+                          position: 'fixed',
+                          top: '10%',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          backgroundColor: '#d4edda',
+                          color: '#155724',
+                          padding: '10px 20px',
+                          borderRadius: '5px',
+                          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                          zIndex: 1000,
+                        }}
+                      >
+                        Successfully submitted!
+                      </div>
+                    )}
 
                     
                   </div>
@@ -578,86 +654,55 @@ const ResponsiveLayout = () => {
   )}
 </div>
 
-                  {/* Table */}
-                  <Table bordered hover style={{ marginTop: '20px', borderColor: '#fffff4', width: '185vh',  borderCollapse: 'collapse'  }}>
-                    <thead>
-                      <tr style={{  height:'65px',textAlign:'center'}}>
-                        <th style={{backgroundColor:'orange', color:'white'}}>Name of the Vendor</th>
-                        <th  style={{backgroundColor:'orange', color:'white'}}>Contact Number</th>
-                        <th style={{backgroundColor:'orange', color:'white'}}>Date of Visit</th>
-                        <th style={{backgroundColor:'orange', color:'white'}}>Entry Time</th>
-                        <th style={{backgroundColor:'orange', color:'white'}}>Visiting Company</th>
-                        <th style={{backgroundColor:'orange', color:'white'}}>Type of Work</th>
-                        <th style={{backgroundColor:'orange', color:'white'}}>ID Number</th>
-                        <th style={{backgroundColor:'orange', color:'white'}}>Exit Time</th>
-                        <th style={{backgroundColor:'orange', color:'white'}}>Purpose</th>
-                        <th style={{backgroundColor:'orange', color:'white'}}>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {dummyData.map((vendor, index) => (
-                        <tr
-                          key={index}
-                          style={{
-                            backgroundColor: index % 2 == 0 ? '#faf4f0' : '#f5d3ba',
-                            height:'65px'
-                          }}
-                        >
-                          <td key={index}
-                          style={{
-                            backgroundColor: index % 2 == 0 ? '#faf4f0' : '#f5d3ba'
-                          }}>{vendor.name}</td>
-                          <td key={index}
-                          style={{
-                            backgroundColor: index % 2 == 0 ? '#faf4f0' : '#f5d3ba'
-                          }}>{vendor.contact}</td>
-                          <td key={index}
-                          style={{
-                            backgroundColor: index % 2 == 0 ? '#faf4f0' : '#f5d3ba'
-                          }}>{vendor.dateOfVisit}</td>
-                          <td key={index}
-                          style={{
-                            backgroundColor: index % 2 == 0 ? '#faf4f0' : '#f5d3ba'
-                          }}>{vendor.entryTime}</td>
-                          <td key={index}
-                          style={{
-                            backgroundColor: index % 2 == 0 ? '#faf4f0' : '#f5d3ba'
-                          }}>{vendor.visitingCompany}</td>
-                          <td key={index}
-                          style={{
-                            backgroundColor: index % 2 == 0 ? '#faf4f0' : '#f5d3ba'
-                          }}>{vendor.typeOfWork}</td>
-                          <td key={index}
-                          style={{
-                            backgroundColor: index % 2 == 0 ? '#faf4f0' : '#f5d3ba'
-                          }}>{vendor.idNumber}</td>
-                          <td key={index}
-                          style={{
-                            backgroundColor: index % 2 == 0 ? '#faf4f0' : '#f5d3ba'
-                          }}>{vendor.exitTime}</td>
-                          <td key={index}
-                          style={{
-                            backgroundColor: index % 2 == 0 ? '#faf4f0' : '#f5d3ba'
-                          }}>{vendor.purpose}</td>
-                          <td key={index}
-                          style={{
-                            backgroundColor: index % 2 == 0 ? '#faf4f0' : '#f5d3ba'
-                          }}>
-                            <FaEye
-                              style={{ cursor: 'pointer', color: showDetails === index ? '#FF8C00' : 'gray' }}
-                              onClick={() => handleToggleDetails(index)}
-                            />
-                            {showDetails === index && (
-                              <span style={{ marginLeft: '10px', color: '#FF8C00' }}></span>
-                            )}
-                            {showDetails !== index && (
-                              <span style={{ marginLeft: '10px', color: '#999' }}></span>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
+               {/* Table */}
+<Table bordered hover style={{ marginTop: '20px', borderColor: '#fffff4', width: '195vh', borderCollapse: 'collapse' }}>
+  <thead>
+    <tr style={{ height: '65px', textAlign: 'center' }}>
+      <th style={{ backgroundColor: 'orange', color: 'white' }}>Name of the Vendor</th>
+      <th style={{ backgroundColor: 'orange', color: 'white' }}>Contact Number</th>
+      <th style={{ backgroundColor: 'orange', color: 'white' }}>Date of Visit</th>
+      <th style={{ backgroundColor: 'orange', color: 'white' }}>Entry Time</th>
+      <th style={{ backgroundColor: 'orange', color: 'white' }}>Visiting Company</th>
+      <th style={{ backgroundColor: 'orange', color: 'white' }}>Type of Work</th>
+      <th style={{ backgroundColor: 'orange', color: 'white' }}>ID Number</th>
+      <th style={{ backgroundColor: 'orange', color: 'white' }}>Exit Time</th>
+      <th style={{ backgroundColor: 'orange', color: 'white' }}>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {vendors.map((vendor, index) => (
+      <tr
+        key={index}
+        style={{
+          backgroundColor: index % 2 === 0 ? '#faf4f0' : '#f5d3ba',
+          height: '65px',
+        }}
+      >
+        <td>{vendor.fullName}</td>
+        <td>{vendor.phoneNumber}</td>
+        <td>{vendor.dateOfVisit}</td>
+        <td>{vendor.entryTime}</td>
+        <td>{vendor.company}</td>
+        <td>{vendor.purposeOfVisit}</td>
+        <td>{vendor.idNumber}</td>
+        <td>{vendor.exitTime}</td>
+        <td style={{ textAlign: 'center', verticalAlign: 'middle' }}> {/* Center the icon */}
+          <FaEye
+            style={{ cursor: 'pointer', color: showDetails === index ? '#FF8C00' : 'gray' }}
+            onClick={() => handleToggleDetails(index)}
+          />
+          {showDetails === index && (
+            <span style={{ color: '#FF8C00' }}></span>
+          )}
+          {showDetails !== index && (
+            <span style={{ color: '#999' }}></span>
+          )}
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</Table>
+
 
                 </div>
               )}
